@@ -52,6 +52,7 @@ var getGlobal = function () {
 * 以上内容借鉴于es6标准入门第二版和es6.ruanyifeng.com /2.let和const命令，最下边还有组件和包的顶层对象兼容方法。
 
 #### 跨模块常量
+* 必须在es6环境下才可以使用，否则会报错。
 ```
 	//constants.js模块
 	export const A=1;
