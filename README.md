@@ -16,8 +16,36 @@
 
 ### const
 1. 声明一个常量，一旦声明，常量的值不可以改变。
-*** 保存的只是地址，比如数组和对象，它里边还是可以插入值的
+* 保存的只是地址，比如数组和对象，它里边还是可以插入值的
 2. 只能在声明之后使用。
 3. 不可重复声明。
 
+#### es6有六种声明变量的方式
+```
+var function let const import class
+````
 
+### 顶层对象的属性
+1. 在浏览器指window对象，在Node指global对象。
+2. 在全局环境使用let声明的变量不会成为顶层对象。
+
+#### 以下两个方法为顶层对象兼容。
+```
+// 方法一
+(typeof window !== 'undefined'
+	? window
+	: (typeof process === 'object' &&
+	  typeof require === 'function' &&
+	  typeof global === 'object')
+	? global
+	: this);
+
+// 方法二
+var getGlobal = function () {
+	if (typeof self !== 'undefined') { return self; }
+	if (typeof window !== 'undefined') { return window; }
+	if (typeof global !== 'undefined') { return global; }
+	throw new Error('unable to locate global object');
+};
+```
+* 以上内容借鉴于es6.ruanyifeng.com /2.let和const命令，最下边还有组件和包的顶层对象兼容方法。
