@@ -7,7 +7,7 @@
 2. for循环可以使用let,每一次循环的let 值都是重新声明的变量。
 3. let不存在变量提升，所以let声明的变量只能先声明，在使用，不能先使用再声明。
 4. 在代码块内，使用let命令之前，该变量在代码块中是不可用的。
-5. let不可以在代码块中重复声明.
+5. let不可以在代码块中重复声明。
 
 ### 块级作用域
 1. 内层变量会覆盖外层变量
@@ -19,6 +19,7 @@
 * 保存的只是地址，比如数组和对象，它里边还是可以插入值的
 2. 只能在声明之后使用。
 3. 不可重复声明。
+4. const声明的变量只在其所在的代码块有效。
 
 #### es6有六种声明变量的方式
 ```
@@ -48,4 +49,17 @@ var getGlobal = function () {
 	throw new Error('unable to locate global object');
 };
 ```
-* 以上内容借鉴于es6.ruanyifeng.com /2.let和const命令，最下边还有组件和包的顶层对象兼容方法。
+* 以上内容借鉴于es6标准入门第二版和es6.ruanyifeng.com /2.let和const命令，最下边还有组件和包的顶层对象兼容方法。
+
+#### 跨模块常量
+```
+	//constants.js模块
+	export const A=1;
+	export const B=2;
+	//test1.js模块 
+	import *as constants from './constants';
+	console.log(constants.A);
+	//test2.js模块
+	import {A,B} from './constants';
+	console.log(A);
+```
