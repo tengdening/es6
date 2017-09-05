@@ -87,7 +87,7 @@ let [a,b="b"]=["a"];
 ```
 // foo为匹配的模式，aa才是变量。
 let { foo:aa,bar:bb } = { foo: "aaa", bar: "bbb" };
-
+```
 
 
 
