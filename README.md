@@ -49,7 +49,6 @@ var getGlobal = function () {
 	throw new Error('unable to locate global object');
 };
 ```
-* 以上内容借鉴于es6标准入门第二版和es6.ruanyifeng.com /2.let和const命令，最下边还有组件和包的顶层对象兼容方法。
 
 #### 跨模块常量
 * 必须在es6环境下才可以使用，否则会报错。
@@ -168,3 +167,23 @@ add([1, 2]); // 3
 2. 内部有yield命令。执行到这个命令的时候，它会直接返回，下次调用会继续执行下一个yield命令。
 3. 必须使用next()方法调用。return语句在yield命令之后仁执行，return之后的yield不再执行。里边可以传参，参数代表它上一个yield返回的值。next()第一个传参无效。它会返回value和done，value是返回的值，done返回的是布尔值，false表示遍历还没有结束。
 4. 如果yield当表达式来用的话，需要加括号。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* 以上内容借鉴于es6标准入门第二版和es6.ruanyifeng.com /2.let和const命令，最下边还有组件和包的顶层对象兼容方法。
