@@ -69,6 +69,7 @@ var getGlobal = function () {
 ## 第二章 变量的解构赋值
 ### 数组的解构赋值
 1. 数组解构
+* 数组的解构是按顺序的
 ```
 // 对号入座，一一对应。
 var [a,b,c]=[1,2,3];
@@ -77,20 +78,74 @@ var [a,b,c]=[1,2,3];
 var [a,b,...c]=[1,2,3];
 // 空值也占位置
 let [x, , y] = [1, 2, 3];
-// 依然对号入座。b=2,d=3;
+// a=1,b=2,d=4;
 let [a, [b], d] = [1, [2, 3], 4];
-// 可以添加默认值 默认值必须已经声明。
+// 可以添加默认值 默认值必须已经声明。如果它的值是null将不执行默认值
 let [a,b="b"]=["a"];
 ```
 2. 对象解构
->1. 变量必须与属性同名
+* 变量必须与属性同名，对象的结构不需要按顺序
 ```
-// foo为匹配的模式，aa才是变量。
+// foo为匹配的模式，aa才是变量，foo只是模式
 let { foo:aa,bar:bb } = { foo: "aaa", bar: "bbb" };
+// 还可以嵌套
+var node = {
+  loc: {
+    start: {
+      line: 1,
+      column: 5
+    }
+  }
+};
+var { loc, loc: { start }, loc: { start: { line }} } = node;
+line // 1
+loc  // Object {start: Object}
+start // Object {line: 1, column: 5}
+// 也可以指定默认值 如果它的值是null将不执行默认值
+var {x: y = 3} = {x: 5};
+y // 5
+var { message: msg = 'Something went wrong' } = {};
+msg // "Something went wrong"
+// 如果解构失败，变量的值等于undefined。
+let {foo} = {bar: 'baz'};
+foo // undefined
+// {不能写在行首，不然javascript会理解为代码块
+let x;
+({x} = {x: 1});
+//数组本质是特殊的对象，因此可以对数组进行对象属性的解构
+let arr = [1, 2, 3];
+let {0 : first, [arr.length - 1] : last} = arr;
+first // 1
+last // 3
 ```
+3. 字符串解构
+* 字符串解构是因为此时字符串被转换为一个类似数组的对象
+```
+// 类似数组的对象都有一个length属性，因此还可以对这个属性解构赋值。
+let {length : len} = 'hello';
+len // 5
+```
+4. 数值和布尔值的解构赋值
+* 解构赋值时，如果右边是数值和布尔值时，则先回转换为对象
+// 这个看不懂。
+5. 函数参数的解构赋值
+```
+function add([x, y]){
+  return x + y;
+}
+add([1, 2]); // 3
+```
+6. 解构赋值的用途
+>1. 交换变量的值
+>2. 从函数返回多个值
+>3. 函数参数的定义
+>4. 提取JSON数据
+>5. 函数参数的默认值
+>6. 遍历map结构
+>7. 输入模块的指定方法
 
-
-
+## 第三章 字符串的扩展
+1. 字符串的Unicode表达式
 
 
 
