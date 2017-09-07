@@ -183,13 +183,28 @@ new RegExp(/xyz/, 'i');
 // 正确的
 new RegExp(/abc/ig, 'i');
 ```
-2. 
-
-
-
-
-
-
+2. 回忆下正则对象的方法
+>1. test() 返回字符串是否与Reg匹配。
+>2. exec() 返回字符串中与reg首次匹配的值
+>3. compile() 用于改变RegExp
+```
+	以上三种都是这种调用模式:
+	reg.test/exec/compile(str)
+```
+>4. replace() 替换reg匹配字符串
+```
+	str.replace(reg,"替换的字符");
+	如果全部替换，需要给正则添加 g全部参数
+```
+>5. split() 按reg匹配的值拆分成数组
+>6. match(n) 返回reg匹配的第n个字符串
+>7. search() 返回reg匹配的第一个字符串，没有则返回-1。
+```
+以上三种都是这种调用模式:
+str.split/match/search(reg)
+```
+>8. 参数 :g 全文查找   i 忽略大小写   m 多行查找   
+3. 剩下的内容以后添加，现在看懵逼了。都一堆一堆的。
 
 
 
