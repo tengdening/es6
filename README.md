@@ -144,7 +144,7 @@ add([1, 2]); // 3
 
 ## 第三章 字符串的扩展
 1. 字符串的Unicode表达式
-* Unicode码一般为\uXXXX,但有的时候回超出，那样就无法识别，遇到这样的可以使用{}来解决
+* Unicode码一般为\uXXXX,但有的时候会超出，那样就无法识别，遇到这样的可以使用{}来解决
 2. codePointAt()
 * 它与charCodeAt()类似，它可以返回32位的UTF-16的正确编码。返回的是十进制的，如果需要别的进制的使用toString(进制数)来改变
 3. fromCodePoint()
@@ -219,8 +219,21 @@ str.split/match/search(reg)
 
 
 ## 第十八章 Class的基本语法
-### 
+### 简介
+1. class和es5的差不多，es5的构造函数对应es6的构造方法。下边的constructor就是构造方法。this则代表实例对象。
+2. 定义类的方法的时候，不需要加function关键字。方法之间不需要加逗号。
+```
+class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
 
+  toString() {
+    return '(' + this.x + ', ' + this.y + ')';
+  }
+}
+```
 
 ## 第二十三章 编程分格
 ### 块级作用域
