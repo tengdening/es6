@@ -228,12 +228,213 @@ class Point {
     this.x = x;
     this.y = y;
   }
-
   toString() {
     return '(' + this.x + ', ' + this.y + ')';
   }
 }
 ```
+3. es6的类，完全可以看作构造函数的另一种写法，使用也是使用new命令。
+4. 构造函数的prototype方法，es6的类上边依然存在。
+5. 类的方法都是添加在prototype上的，使用* Object.assign(类.prototype,{添加的方法}) *方法可以更方便的添加。
+* 不可枚举：就是使用for ... in遍历，遍历不到。
+6. es6类内部的方法是不可枚举的，而es5是可以枚举的。
+```
+class Point{
+	constructor(x,y){
+	// ...
+	}
+	toString(){
+
+	}
+}
+Object.keys(Point.prototype);
+// []
+Object.getOwnPropertyNames(Point.prototype)
+// [constructor,toString]
+```
+*该Object.getOwnPropertyNames()方法返回一个直接发现给定对象的所有属性（包括使用Symbol的属性除外的非枚举属性）的数组。
+7. 类的属性名可以使用表达式。
+```
+let methodName = 'getArea';
+class Square{
+	constructor(length){
+	// ...
+	}
+	[methodName](){
+	// ...
+	}
+}
+// Square 的[methodName]方法名为getArea。
+```
+### 严格方式
+类和模块的内部，默认都是严格模式，所以不需要使用* use strict *指定运行模式。
+### constructor方法
+1. constructor方法是类的默认方法，每个类必须有constructor方法。如果没有，会默认添加。
+2. constructor默认返回this 也可以指定返回的函数，那样的话就会返回另一个对象。那样导致实例化出来的对象不是原来的类的实例。
+3. 类必须使用new调用，否则会报错，构造函数不需要使用new调用，这就是类和构造函数的区别。
+
+### 类的实例对象
+1. 使用new来实例，不使用new会报错。
+* hasOwnProperty :用于指示一个对象自身(不包括原型链)是否具有指定名称的属性。如果有，返回true，否则返回false。
+2. 与es5一样，实例的属性除非显示定义在其本身（即定义在this对象上），否则都是定义在原型上（即定义在class上）。
+```
+//定义类
+class Point {
+
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  toString() {
+    return '(' + this.x + ', ' + this.y + ')';
+  }
+
+}
+
+var point = new Point(2, 3);
+
+point.toString() // (2, 3)
+
+point.hasOwnProperty('x') // true
+point.hasOwnProperty('y') // true
+point.hasOwnProperty('toString') // false
+point.__proto__.hasOwnProperty('toString') // true
+```
+3. 与es5一样，类的所有实例都共享一个原型。
+* 写到这里的时候，好像明白了 __proto__ 和prototype的关系。
+> __proto__是new实例后出现的，如果实例后想改类的方法，如要在这里改。
+> prototype是原来的类上的。
+> 又看了下边的感觉自己错了，__proto__是各个浏览器厂商的私有属性,反正都不推荐使用，会把原型改掉。
+```
+var p1 = new Point(2,3);
+var p2 = new Point(3,2);
+p1.__proto__ === p2.__proto__
+//true
+```
+### Class表达式
+* 下边的这个看的很懵，我的理解是一个MyClass的类，Me只能在MyClass内部调用，如果内部不需要调用，可以不写Me.
+1. 与函数一样，类也可以使用表达式的形式定义。
+```
+const MyClass = class Me {
+  getClassName() {
+    return Me.name;
+  }
+};
+// 上面代码使用表达式定义了一个类。需要注意的是，这个类的名字是MyClass而不是Me，Me只在 Class 的内部代码可用，指代当前类。
+let inst = new MyClass();
+inst.getClassName() // Me
+Me.name // ReferenceError: Me is not defined
+// 上面代码表示，Me只在 Class 内部有定义。
+// 如果类的内部没用到的话，可以省略Me
+```
+2. 采用Class表达式，可以写出立即执行的Class，下边定义了一个person的立即执行的类的实例。
+```
+let person=new class{
+	contructor(name){
+		this.name=name;
+	}
+	sayName(){
+		console.log(this.name);
+	}
+}("张三");
+person.sayName(); // 张三
+```
+### 不存在变量提升
+1. 类不存在变量提升，否则会报错。
+
+### 私有方法
+1. 一般在命名上下功夫，来提示人这是私有还是公有，这个方法只能是规范，它还是可以获取到的。
+```
+class Widget{
+	// 公有方法
+	foo(baz){
+		this._baz(baz);
+	}
+	// 私有方法
+	_baz(baz){
+		return this.snaf=baz;
+	}
+}
+```
+2. 另一种方法就是把私有方法移出模块，然后在公有方法里边* bar.call(this,baz) *上、就可以使bar成为了当前模块的私有方法。
+```
+class Widget{
+	// 公有方法
+	foo(baz){
+		bar.call(this,baz)
+	}
+}
+function bar(baz){
+	return this.snaf=baz;
+}
+```
+### 私有属性
+
+* 属性名前边加#，这个也可以应用于私有方法。
+
+### this的指向
+1. 类的内部都会定义this，它指向类的实例，但是单独使用，有可能会报错。
+
+### name属性
+1. name属性总是返回紧跟在class关键字后面的类名。
+
+### class的取值函数(getter)和存值函数(setter)
+1. 在类的内部可以使用* get ** set *关键字，对某个属性设置存值函数和取值函数。拦截该属性的存取行为。
+
+### class的Generator方法。
+1. 如果某个方法之前加（*）号，表示该方法是一个Generator函数。
+
+### class的静态方法
+1. 类相当于实例的原型，所有类中定义的方法，都会被实例继承。如果在方法前加* static *关键字，就表示该方法不会被继承。而是只能通过类来调用。这种称为静态方法。
+```
+class Foo{
+	static classMethod(){
+		return 'hello';
+	}
+}
+Foo.classMethod() //'hello'
+var foo=new Foo();
+foo.classMethod() //报错 foo.classMethod is a not function
+```
+2. 如果静态方法包含this关键字，这个this指的是类，而不是实例。
+```
+class Foo {
+  static bar () {
+    this.baz();
+  }
+  static baz () {
+    console.log('hello');
+  }
+  baz () {
+    console.log('world');
+  }
+}
+
+Foo.bar() // hello
+```
+3. 父类的静态方法，可以被子类继承。
+4. 静态方法也可以从super对象上调用。
+* 这个super不懂，准备去查一查。
+```
+class Foo {
+  static classMethod() {
+    return 'hello';
+  }
+}
+class Bar extends Foo {
+  static classMethod() {
+    return super.classMethod() + ', too';
+  }
+}
+Bar.classMethod() // "hello, too"
+```
+
+
+
+
+
+
 
 ## 第二十三章 编程分格
 ### 块级作用域
