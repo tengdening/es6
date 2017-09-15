@@ -65,6 +65,17 @@ var getGlobal = function () {
 ```
 
 
+
+
+
+
+
+
+
+
+
+
+
 ## 第二章 变量的解构赋值
 ### 数组的解构赋值
 * 数组的解构是按顺序的
@@ -142,6 +153,17 @@ add([1, 2]); // 3
 >6. 遍历map结构
 >7. 输入模块的指定方法
 
+
+
+
+
+
+
+
+
+
+
+
 ## 第三章 字符串的扩展
 1. 字符串的Unicode表达式
 * Unicode码一般为\uXXXX,但有的时候会超出，那样就无法识别，遇到这样的可以使用{}来解决
@@ -169,6 +191,16 @@ add([1, 2]); // 3
 10. 模板字符串
 * `内容` 使用`来定义字符串，定义的字符串可以换行
 * 模板字符串中嵌入变量，需要将变量名写在${}里边。{}里边可以放任意的javascript变量，函数，对象。
+
+
+
+
+
+
+
+
+
+
 
 ## 第四章 正则的扩展
 ### RegExp构造函数
@@ -210,12 +242,36 @@ str.split/match/search(reg)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 ## 第十五章 Generator函数的用法
 ### 基本用法
 1. 在函数function后边加*号。
 2. 内部有yield命令。执行到这个命令的时候，它会直接返回，下次调用会继续执行下一个yield命令。
 3. 必须使用next()方法调用。return语句在yield命令之后仁执行，return之后的yield不再执行。里边可以传参，参数代表它上一个yield返回的值。next()第一个传参无效。它会返回value和done，value是返回的值，done返回的是布尔值，false表示遍历还没有结束。
 4. 如果yield当表达式来用的话，需要加括号。
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## 第十八章 Class的基本语法
@@ -416,6 +472,7 @@ Foo.bar() // hello
 3. 父类的静态方法，可以被子类继承。
 4. 静态方法也可以从super对象上调用。
 * 这个super不懂，准备去查一查。
+* super的作用是调用父类的protected函数。只有通过"super"这个魔咒，我们才能操作父类的protected成员，别无它法。
 ```
 class Foo {
   static classMethod() {
@@ -429,6 +486,171 @@ class Bar extends Foo {
 }
 Bar.classMethod() // "hello, too"
 ```
+### class的静态属性和实例属性
+#### 实例属性
+1. 类的实例属性可以用等式，写入类的定义之中。
+```
+class MyClass {
+  myProp = 42;
+
+  constructor() {
+    console.log(this.myProp); // 42
+  }
+}
+```
+#### 类的静态属性
+1. 类的静态属性在实例属性前面加上，加上static关键字就可以了。
+```
+class MyClass {
+  static myStaticProp = 42;
+
+  constructor() {
+    console.log(MyClass.myStaticProp); // 42
+  }
+}
+```
+### new.target属性
+1. new是构造函数生成实例的命令，es6为new命令引入了new.target属性，该属性一般使用在构造函数中，返回new命令作用于的那个构造函数，如果构造函数不是通过new命令调用的，new.target会返回undefined。这个属性用来确定构造函数是怎么调用的。
+2. Class内部调用会new.target,返回当前Class。
+```
+function Person(name) {
+  if (new.target !== undefined) {
+    this.name = name;
+  } else {
+    throw new Error('必须使用new生成实例');
+  }
+}
+
+// 另一种写法
+function Person(name) {
+  if (new.target === Person) {
+    this.name = name;
+  } else {
+    throw new Error('必须使用 new 生成实例');
+  }
+}
+
+var person = new Person('张三'); // 正确
+var notAPerson = Person.call(person, '张三');  // 报错
+```
+
+
+
+
+
+
+
+
+
+## 十九章 Class的继承 
+### 简介
+1. class 可通过extends来实例继承。
+```
+class aa{
+	
+}
+class bb extends aa{
+	
+}
+```
+2. 字类必须在constructor方法中调用super方法，否则新建实例会报错。因为子类没有自己的this对象，而是继承父类的this对象，然后对其加工，如果不使用super方法，子类就得不到this对象。
+```
+class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
+class ColorPoint extends Point {
+  constructor(x, y, color) {
+    this.color = color; // ReferenceError
+    super(x, y);
+    this.color = color; // 正确
+  }
+}
+```
+3. 子类的实例既是子类的实例，也是父类的实例
+```
+let cp = new ColorPoint(25, 8, 'green');
+cp instanceof ColorPoint // true
+cp instanceof Point // true
+```
+### Object.getPrototypeOf()
+* 可以用来判断，一个类是否继承了另一个类。
+```
+Object.getPrototypeOf(ColorPoint) === Point
+```
+### super关键字
+* super关键字既可以当函数来使用，也可以当对象来使用。
+#### 作为函数来使用的时候 
+1. super代表函数来使用时，代表父类的构造函数，es6规定，子类的构造函数必须使用一次super关键字。
+2. super虽然代表的是父类的构造函数，但是它返回的是子类的实例。即super内部的this指的是子类。因此super在这里相当于父类.prototype.constructor.call(this);
+```
+class A {
+  constructor() {
+    console.log(new.target.name);
+  }
+}
+class B extends A {
+  constructor() {
+    super();
+  }
+}
+new A() // A
+new B() // B
+```
+3. super作为函数来使用的时候，必须放在子类的构造函数里边使用，否则会报错。
+
+#### 作为对象来使用的时候
+1. super作为对象来使用的时候，在普通方法中，指向父类的原型对象；在静态方法中，指向父类。
+```
+class A{
+	p(){
+		return 1;
+	}
+}
+class B extends A{
+	constructor(){
+		super()
+		console.log(super.p)
+	}
+}
+let b=new B();
+```
+* 需要注意的是super指向的是原型对象，所以定义在实例上的方法或属性，是无法通过super调用的。
+```
+class A{
+	constructor(){
+		this.a=1;
+	}
+}
+class B extends A{
+	constructor(){
+		super();
+	}
+	get m(){
+		return super.p;
+	}
+}
+let b=new B();
+b.m // undefined;
+```
+* 如果p定义在父类的原型上，super就可以取到。
+```
+class A{}
+A.prototype.p=1;
+class B extends A{
+	constructor(){
+		super()
+		console.log(super.p)
+	}
+}
+let b=new B();
+```
+
+
+
+
 
 
 
