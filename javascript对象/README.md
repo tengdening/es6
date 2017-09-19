@@ -141,13 +141,15 @@
 ```
 ## 继承
 * 类的三个部分。
-var A=function(aa){
-	this.aa=aa;
-};
-A.cc=function(){};
-A.prototype.bb=function(){
-	b:function(){};
-};
+```
+	var A=function(aa){
+		this.aa=aa;
+	};
+	A.cc=function(){};
+	A.prototype.bb=function(){
+		b:function(){};
+	};
+```
 ### 类似继承
 * instanceof是通过判断对象的prototype链来确定这个对象是否是某个类的实例。而不关心对象与类的结构。
 ```
