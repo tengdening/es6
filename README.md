@@ -647,6 +647,31 @@ class B extends A{
 }
 let b=new B();
 ```
+*es6规定，通过super调用父类的方法时，super会绑定子类的this。
+```
+class A{
+	constructor(){
+		this.x=1;
+	}
+	print(){
+		console.log(this.x)
+	}
+}
+class B extends A{
+	constructor(){
+		super();
+		this.x=2;
+	}
+	m(){
+		super.print()
+	}
+}
+let b=new B;
+b.m()  //2
+// super.print()绑定的是字类的this。所以输出的是2。
+```
+
+
 
 
 
