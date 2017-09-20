@@ -361,3 +361,230 @@ console.log(book.alikeBook); js book  // ["css book", "html book", "xml book", "
 	console.log(add(5))
 	console.log(add(8,1))
 ```
+## 工厂模式
+* 简单工厂函数把多个类合并在一个函数里边。
+```
+	function Baskeball(){
+		this.intro="篮球";
+	};
+	Baskeball.prototype={
+		aa: function(){
+			console.log("篮球方法");
+		},
+	};
+	function Football(){
+		this.intro="足球";
+	};
+	Football.prototype={
+		bb: function(){
+			console.log("足球方法");
+		},
+	};
+	var SportFactory=function(name){
+		switch(name){
+			case 'NBA':
+				return new Baskeball();
+			case 'wordCup':
+				return new Football();
+		}
+	};
+	var bb=SportFactory('NBA');
+	bb.aa();
+	console.log(bb.intro);
+```
+* 简单工厂创建相似对象
+```
+	function createBook(type,text){
+		var o = new Object();
+		o.content=text;
+		o.show=function(){
+			// 显示方法
+		}
+		if (type=="alert") {
+			// 执行体
+		}else if(type=="prompt"){
+			// 执行体
+		}else if(type=="confirm"){
+			// 执行体
+		}
+		return o;
+	};
+	var userNameAlert=createBook('alert','用户只能输入26个字母和数字');
+```
+## 工厂方法模式
+* 安全的工厂方法模式
+```
+	var Factory = function(type,content){
+		if(this instanceof Factory){
+			var s=new this[type](content);
+			return s;
+		}else{
+			return new Factory(type,content)
+		}
+	}
+	Factory.prototype={
+		Java:function(content){
+			/*...*/
+		},
+		Javascript:function(content){
+			/*...*/
+		},
+		Ui:function(content){
+			this.content=content;
+			(function(content){
+				var div=document.createElement("div");
+				div.innerHTML=content;
+				div.style.border="1px solid #f00";
+				document.getElementById("container").appendChild(div);
+			})(content);
+		},
+		Php:function(content){
+			/*...*/
+		}
+	};
+	var data=[
+		{type : 'Javascript' , content : "javascript哪家强", },
+		{type : 'Ui' , content : "Ui哪家强", },
+	];
+	for( var i=0; i<data.length;i++){
+		Factory(data[i].type,data[i].content)
+	}
+```
+## 抽象的工厂模式
+* 抽象工厂模式不需要用来创建对象。可以把它当作父类，来创建一些子类。
+* 看到这里的时候，发现subType.constructor=subType这句看不懂，需要返回去多看几遍继承了。
+```
+	var VehicleFactory=function(subType,superType){
+		if(typeof VehicleFactory[superType] === 'function'){
+			function F(){};
+			F.prototype= new VehicleFactory[superType]();
+			subType.constructor=subType;
+			subType.prototype=new F();
+		}else{
+			throw new Error('未创建该抽象类');
+		}
+	};
+	/* 小汽车抽象类 */
+	VehicleFactory.Car=function(){
+		this.type="car";
+	};
+
+	VehicleFactory.Car.prototype={
+		getPrice: function(){
+			return new Error('抽象方法不能调用');
+		},
+		getSpeed:function(){
+			return new Error("抽象方法不能调用")
+		},
+	};
+	/* 公交车抽象类 */
+	VehicleFactory.Bus=function(){
+		this.type="bus";
+	};
+
+	VehicleFactory.Bus.prototype={
+		getPrice: function(){
+			return new Error('抽象方法不能调用');
+		},
+		getPassengerNum:function(){
+			return new Error("抽象方法不能调用")
+		},
+	};
+
+	/*宝马汽车子类*/
+	var BMW=function(price,speed){
+		this.price=price;
+		this.speed=speed;
+	};
+	VehicleFactory(BMW,'Car');
+	BMW.prototype.getPrice=function(){
+		return this.price;
+	};
+	BMW.prototype.getSpeed=function(){
+		return this.speed;
+	}
+	/* 兰博基尼汽车子类 */
+	var Lamborghini=function(price,speed){
+		this.sprice=speice;
+		this.speed=speed;
+	};
+	VehicleFactory(Lamborghini,'Car');
+	Lamborghini.prototype.getPrice=function(){
+		return this.price;
+	};
+	Lamborghini.prototype.getSpeed=function(){
+		return this.speed;
+	};
+	var truck=new BMW(1000000,1000);
+	console.log(truck.getPrice());
+	console.log(truck.type);
+```
+## 建造者模式
+* 用来创建属性、方法都不一样的。
+* 下边的Human传的参数不懂。
+* 这个继承方法有点绕，还需要把前两章多复习N遍。
+```
+	var Human=function(param){
+		this.skill=param&&param.skill||'保密';
+		this.hobby=param&&param.hobby||'保密';
+	};
+	Human.prototype={
+		getSkill:function(){
+			return this.skill;
+		},
+		getHobby:function(){
+			return this.hobby;
+		},
+	};
+	var Named=function(name){
+		var that=this;
+		(function(name,that){
+			that.wholeName= name;
+			if(name.indexOf(' ')>-1){
+				that.FirstName = name.slice(0,name.indexOf(' '));
+				that.secondName= name.slice(name.indexOf(' '));
+			}
+		})(name,that);
+	};
+	var Work=function(work){
+		var that=this;
+		(function(work,that){
+			switch (work){
+				case 'code':
+					that.work = '工程师';
+					that.workDescript= '每天沉醉于编程';
+					break;
+				case 'UI':
+				case 'UE':
+					that.work = '设计师';
+					that.workDescript= '设计更似一种艺术';
+				case 'teach':
+					that.work = '教师';
+					that.workDescript= '分享也是一种快乐';
+				default :
+					that.work = work;
+					that.workDescript= '对不起，我们不知道你的描述。';
+			}
+		})(work,that);
+	}
+	Work.prototype.changeWork=function(work){
+		this.work=work;
+	}
+	Work.prototype.changeDescript=function(setence){
+		this.workDescript=setence;
+	}
+	var Person=function (name,work){
+		var _person=new Human();
+		_person.name=new Named(name);
+		_person.work=new Work(work);
+		return _person;
+	}
+	var person=new Person('xiao ming','UI');
+	console.log(person.skill);
+	console.log(person.getHobby())
+	console.log(person.name.FirstName);
+	console.log(person.work.work);
+	console.log(person.work.workDescript);
+	person.work.changeDescript('更改一下描述');
+	console.log(person.work.workDescript);
+```

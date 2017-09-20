@@ -6,22 +6,73 @@
 </head>
 <body>
 	<span>滕宁</span><sub>TEL:18222806089</sub>
+	<div id="container">
+		
+	</div>
 </body>
 <script>
-	function add(){
-		var arg=arguments,
-			len=arg.length;
-		switch(len){
-			case 0:
-				return 10;
-			case 1:
-				return 10+arg[0];
-			case 2:
-				return arg[0]+arg[1];
-		}
+	var Human=function(param){
+		this.skill=param&&param.skill||'保密';
+		this.hobby=param&&param.hobby||'保密';
+	};
+	Human.prototype={
+		getSkill:function(){
+			return this.skill;
+		},
+		getHobby:function(){
+			return this.hobby;
+		},
+	};
+	var Named=function(name){
+		var that=this;
+		(function(name,that){
+			that.wholeName= name;
+			if(name.indexOf(' ')>-1){
+				that.FirstName = name.slice(0,name.indexOf(' '));
+				that.secondName= name.slice(name.indexOf(' '));
+			}
+		})(name,that);
+	};
+	var Work=function(work){
+		var that=this;
+		(function(work,that){
+			switch (work){
+				case 'code':
+					that.work = '工程师';
+					that.workDescript= '每天沉醉于编程';
+					break;
+				case 'UI':
+				case 'UE':
+					that.work = '设计师';
+					that.workDescript= '设计更似一种艺术';
+				case 'teach':
+					that.work = '教师';
+					that.workDescript= '分享也是一种快乐';
+				default :
+					that.work = work;
+					that.workDescript= '对不起，我们不知道你的描述。';
+			}
+		})(work,that);
 	}
-	console.log(add())
-	console.log(add(5))
-	console.log(add(8,1))
+	Work.prototype.changeWork=function(work){
+		this.work=work;
+	}
+	Work.prototype.changeDescript=function(setence){
+		this.workDescript=setence;
+	}
+	var Person=function (name,work){
+		var _person=new Human();
+		_person.name=new Named(name);
+		_person.work=new Work(work);
+		return _person;
+	}
+	var person=new Person('xiao ming','UI');
+	console.log(person.skill);
+	console.log(person.getHobby())
+	console.log(person.name.FirstName);
+	console.log(person.work.work);
+	console.log(person.work.workDescript);
+	person.work.changeDescript('更改一下描述');
+	console.log(person.work.workDescript);
 </script>
 </html>
