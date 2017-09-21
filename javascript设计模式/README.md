@@ -588,3 +588,49 @@ console.log(book.alikeBook); js book  // ["css book", "html book", "xml book", "
 	person.work.changeDescript('更改一下描述');
 	console.log(person.work.workDescript);
 ```
+## 原型模式
+* 用原型实例指向创建对象的类，使用于创建新的对象的类共享原型对象的属性以及方法。
+```
+	var LoopImages=function(imgArr, container){
+		this.imageArray=imgArr;
+		this.container=container;
+	};
+	LoopImages.prototype={
+		createImage: function(){
+			console.log('LoopImages createImage function');
+		},
+		changeImage: function(){
+			console.log('LoopImages changeImage function');
+		},
+	};
+	var SlideLoopImg=function(imgArr,container){
+		LoopImages.call(this,imgArr,container);
+	};
+	SlideLoopImg.prototype=new LoopImages();
+	SlideLoopImg.prototype.changeImage=function(){
+		console.log('SlideLoopImg changeImage function');
+	};
+	var FadeLoopImage=function(imgArr,container,arrow){
+		LoopImages.call(this,imgArr,container);
+		this.arrow=arrow;
+	};
+	FadeLoopImage.prototype=new LoopImages();
+	FadeLoopImage.prototype.changeImage=function(){
+		console.log('FadeLoopImage changeImage function');
+	};
+	var fadeImg=new FadeLoopImage(['1.jpg','2.jpg','3.jpg','4.jpg'],'slide',['left.jpg','right.jpg']);
+	fadeImg.changeImage();
+	var aa=new LoopImages();
+	aa.changeImage();
+```
+* 原型的拓展，不管是基类还是子类，它们的原型都是共享的。是可以拓展的。
+```
+	LoopImages.prototype.getImageLength=function(){
+		return this.imageArray.length;
+	};
+	FadeLoopImage.prototype.getContainer=function(){
+		return this.container;
+	}
+	console.log(fadeImg.getImageLength());
+	console.log(fadeImg.getContainer());
+```

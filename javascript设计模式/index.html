@@ -11,23 +11,45 @@
 	</div>
 </body>
 <script>
-	var A=function(){
-		this.aa=true;
+	var LoopImages=function(imgArr, container){
+		this.imageArray=imgArr;
+		this.container=container;
+	};
+	LoopImages.prototype={
+		createImage: function(){
+			console.log('LoopImages createImage function');
+		},
+		changeImage: function(){
+			console.log('LoopImages changeImage function');
+		},
+	};
+	var SlideLoopImg=function(imgArr,container){
+		LoopImages.call(this,imgArr,container);
+	};
+	SlideLoopImg.prototype=new LoopImages();
+	SlideLoopImg.prototype.changeImage=function(){
+		console.log('SlideLoopImg changeImage function');
+	};
+	var FadeLoopImage=function(imgArr,container,arrow){
+		LoopImages.call(this,imgArr,container);
+		this.arrow=arrow;
+	};
+	FadeLoopImage.prototype=new LoopImages();
+	FadeLoopImage.prototype.changeImage=function(){
+		console.log('FadeLoopImage changeImage function');
+	};
+	
+	var fadeImg=new FadeLoopImage(['1.jpg','2.jpg','3.jpg','4.jpg'],'slide',['left.jpg','right.jpg']);
+	fadeImg.changeImage();
+	var aa=new LoopImages();
+	aa.changeImage();
+	LoopImages.prototype.getImageLength=function(){
+		return this.imageArray.length;
+	};
+	FadeLoopImage.prototype.getContainer=function(){
+		return this.container;
 	}
-	A.prototype.bb=function(){
-		return this.aa;
-	}
-	var B=function(){
-		this.cc=false;
-	}
-	B.prototype=new A();
-	B.prototype.dd=function(){
-		return this.cc;
-	}
-	var a=new A()
-	console.log(b.aa);
-	console.log(b.bb);
-	console.log(b.cc);
-	console.log(b.dd);
+	console.log(fadeImg.getImageLength());
+	console.log(fadeImg.getContainer());
 </script>
 </html>
