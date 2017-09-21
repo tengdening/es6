@@ -70,18 +70,28 @@
 		var num=2; 
 		// 私有方法（对象外边访问不到）
 		function checkId(){
-
+			console.log('checkId获取到了');
 		};
-		// 特权方法（对象外边可以调用）
-		this.getName=function(){};
-		this.getPrice=function(){};
-		this.setName=function(){};
-		this.setPrice=function(){};
+		// 特权方法（对象外边可以调用，get获得,set输出）
+		this.getName=function(){
+			console.log('getName获取到了')
+		};
+		this.getPrice=function(){
+			console.log('getPrice获取到了')
+		};
+		this.setName=function(){
+			console.log(name)
+		};
+		this.setPrice=function(){
+			console.log(price)
+		};
 		// 对象公有属性（对象外边可以获取到）
 		this.id=id;
 		// 对象公有方法（对象外边可以获取到）
-		this.page=function(){};
-		// 构造器（对象外边可以获取到）
+		this.page=function(){
+			console.log('page获取到了')
+		};
+		// 构造器（一遍历对象就会执行）
 		 this.setName(name);
 		 this.setPrice(price);
 	}
@@ -95,8 +105,11 @@
 		// 公有属性（对象外边可以获取到）
 		isJSBook : false,
 		// 公有方法（对象外边可以获取到）
-		display : function(){}
+		display : function(){
+			console.log('display获取到了');
+		}
 	}
+	var book=new Book(10,'zhangsan',999);
 ```
 ## 闭包实现
 * 闭包可以这样来实现,闭包是有权访问另一个函数作用域中变量的函数。即在一个函数中创建另一个函数。
@@ -166,7 +179,7 @@
 	B.prototype.dd=function(){
 		return this.cc;
 	}
-	var a=new A()
+	var b=new B()
 	console.log(b.aa);
 	console.log(b.bb);
 	console.log(b.cc);
@@ -633,4 +646,89 @@ console.log(book.alikeBook); js book  // ["css book", "html book", "xml book", "
 	}
 	console.log(fadeImg.getImageLength());
 	console.log(fadeImg.getContainer());
+```
+* 原型继承
+```
+	function prototypeExtend(aa,bb){
+		var F=function(){};
+		var i=0,
+			args=arguments,
+			len=args.length;
+		for (; i<len; i++){
+			for (var j in args[i]){
+				F.prototype[j]=args[i][j];
+			}
+		}
+		return new F();
+	}
+	var penguin=prototypeExtend({
+		speed:20,
+		swim: function(){
+			console.log('游泳速度'+ this.speed);
+		}
+	},{
+		run: function(speed){
+			console.log('奔跑速度'+ speed);
+		}
+	},{
+		jump:function(){
+			console.log('跳跃动作');
+		}
+	});
+	penguin.swim();
+	penguin.run(10);
+	penguin.jump();
+```
+## 单例模式：只允许实例化一次。
+* 小型代码库
+```
+	var Tn={
+		on:function(){
+			console.log('on方法');
+		},
+		css:function(){
+			console.log('css方法');
+		},
+		html:function(){
+			console.log('html方法');
+		},
+	}
+	Tn.on();
+```
+* 无法修改的静态变量
+```
+	var Conf=(function(){
+		var conf={
+			MAX_NUM: 100,
+			MIN_NUM: 1,
+			COUNT: 1000,
+		};
+		return {
+			get: function(name){
+				return conf[name]?conf[name]:null;
+			}
+		}
+	})()
+	var count=Conf.get('COUNT');
+	console.log(count)
+```
+* 惰性单例
+* 这样写有什么好处呢？没看懂。绕来绕去。还不是获取那个值么？贱人就是矫情
+```
+	var LazySingle=(function(){
+		var _instance=null;
+		function Single(){
+			return {
+				publicMethod: function(){},
+				publicProperty: '1.0',
+			}
+		}
+		return function(){
+			if(!_instance){
+				_instance=Single();
+			}
+			return _instance;
+		}
+	})()
+	console.log(LazySingle().publicProperty)
 ```
