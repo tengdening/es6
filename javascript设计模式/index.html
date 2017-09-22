@@ -14,18 +14,16 @@
 	<div id="box"></div>
 </body>
 <script>
-var Count=(function(){
-	var _img=new Image();
-	return function(param){
-		var str="http://www.count.com/a.gif?";
-		for (var i in param){
-			str += i + '=' + param[i];
-		}
-		_img.src=str;
-		console.log(str)
-	}
-})()
-Count({num:10});
-
+var spans=document.getElementsByTagName('span');
+function changeColor(dom,color,bg){
+	dom.style.color=color;
+	dom.style.background=bg;
+}
+span[0].oumouseover=function(){
+	changeColor(this,'#ddd','#fff');
+}
+span[0].onmouseout=function(){
+	changeColor(this,'#f00','#00f');
+}
 </script>
 </html>

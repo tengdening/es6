@@ -857,7 +857,7 @@ window.A = A = jQuer;
 	};
 	console.log(arrToObjAdapter(arr));
 ```
-## 代理模式
+## 代理模式 ***********************这个看了好久还是不理解*****************************
 * src图片跨域。
 ```
 	var Count=(function(){
@@ -873,3 +873,40 @@ window.A = A = jQuer;
 	})()
 	Count({num:10});
 ```
+## 修饰者模式
+* 在不改变原对象的基础上，通过对其分装拓展使原有对象可以满足用户的更复杂需求。
+* 下边理解，先判断有没有绑定点击事件，没有，直接调用后边的回调函数，有，把旧的点击事件内容保存到一个函数，然后重新添加一个点击事件，调用旧的，再调用新的回调函数。
+```
+	var decorator=function(input,fn){
+		var input=document.getElementById(input);
+		if (input.onclick === 'function') {
+			var oldClickFn=input.onclick;
+			input.onclick=function(){
+				oldClickFn();
+				fn();
+			}
+		}else{
+			input.onclick=fn;
+		}
+	}
+	decorator(input,function(){
+		input.style.display="none";
+	})
+```
+## 桥接模式
+* 就是把逻辑相似的代码打包一个函数，每次来实现调用即可。
+```
+	var spans=document.getElementsByTagName('span');
+	function changeColor(dom,color,bg){
+		dom.style.color=color;
+		dom.style.background=bg;
+	}
+	span[0].oumouseover=function(){
+		changeColor(this,'#ddd','#fff');
+	}
+	span[0].onmouseout=function(){
+		changeColor(this,'#f00','#00f');
+	}
+```
+## 组合模式
+* 
