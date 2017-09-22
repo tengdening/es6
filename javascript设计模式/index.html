@@ -4,57 +4,28 @@
 	<meta charset="UTF-8">
 	<title>Document</title>
 </head>
+<style>
+	#box{
+		height: 50px;
+
+	}
+</style>
 <body>
-	<span>滕宁</span><sub>TEL:18222806089</sub>
-	<div id="container">
-		
-	</div>
+	<div id="box"></div>
 </body>
 <script>
-	var Book=function(id,name,price){
-		// 私有属性（对象外边访问不到）
-		var num=2; 
-		// 私有方法（对象外边访问不到）
-		function checkId(){
-			console.log('checkId获取到了');
-		};
-		// 特权方法（对象外边可以调用）
-		this.getName=function(){
-			console.log('getName获取到了')
-		};
-		this.getPrice=function(){
-			console.log('getPrice获取到了')
-		};
-		this.setName=function(){
-			console.log(name)
-		};
-		this.setPrice=function(){
-			console.log(price)
-		};
-		// 对象公有属性（对象外边可以获取到）
-		this.id=id;
-		// 对象公有方法（对象外边可以获取到）
-		this.page=function(){
-			console.log('page获取到了')
-		};
-		// 构造器（对象外边可以获取到）
-		 this.setName(name);
-		 this.setPrice(price);
-	}
-	// 类静态公有属性（new过之后子类无法调用，父类自己可以调用）
-	Book.isChinese=true;
-	// 类静态公有方法（new过之后子类无法调用，父类自己可以调用）
-	Book.resetTime=function(){
-		console.log('new Tiem');
-	}
-	Book.prototype={
-		// 公有属性（对象外边可以获取到）
-		isJSBook : false,
-		// 公有方法（对象外边可以获取到）
-		display : function(){
-			console.log('display获取到了');
+var Count=(function(){
+	var _img=new Image();
+	return function(param){
+		var str="http://www.count.com/a.gif?";
+		for (var i in param){
+			str += i + '=' + param[i];
 		}
+		_img.src=str;
+		console.log(str)
 	}
-	var book=new Book(10,'zhangsan',999);
+})()
+Count({num:10});
+
 </script>
 </html>

@@ -269,17 +269,19 @@ console.log(book.alikeBook); js book  // ["css book", "html book", "xml book", "
 		alikeBook: ['css book','html book']
 	}
 	function createBook(obj){
-		var o=new inheritObject(obj);
+		var o= inheritObject(obj);
 		o.getName=function(){
 			console.log(this.name);
 		};
 		return o;
 	}
 	var aa=new createBook(book);
-	aa.getName()
+	aa.getName();
+	console.log(aa.name);
+	console.log(aa.alikeBook);
 ```
 ### 寄生组合式继承
-* 这个的第二个函数inherPrototype看不懂。
+* 这里的第二个函数inherPrototype看不懂。
 ```
 	function inheritObject(o){
 		function F(){};
@@ -731,4 +733,143 @@ console.log(book.alikeBook); js book  // ["css book", "html book", "xml book", "
 		}
 	})()
 	console.log(LazySingle().publicProperty)
+```
+## 外观模式
+* 事件兼容模式
+```
+	function addEvent(dom,type,fn){
+		if (dom.addEventListener) {
+			dom.addEventListener(type,fn,false);
+		}else if(dom.attachEvent){
+			dom.attachEvent('on'+type,fn);
+		}else{
+			dom['on'+type]=fn;
+		}
+	};
+	addEvent(document.getElementById('box'),'click',function(){
+		console.log(1)
+	})
+	addEvent(document.getElementById('box'),'click',function(){
+		console.log(2)
+	})
+```
+* 阻止承认行为兼容和获取事件对象、获取元素兼容。
+* 最后一个点击事件的判断很让人费解，为什么要判断不全等呢？
+```
+	var getEvent=function(event){
+		return event||window.event;
+	}
+	var getTarget=function(event){
+		var event=getEvent(event);
+		return event.target||event.srcElement;
+	}
+	var preventDefault = function(event){
+		var event=getEvent(event);
+		if (event.preventDefault) {
+			event.preventDefault();
+		}else{
+			event.returnValue=false;
+		}
+	}
+	document.onclick=function(e){
+		preventDefault(e);
+		if (getTarget(e) !== document.getElementById('box')) {
+			console.log(getTarget(e) )
+			console.log(1)
+			console.log(document.getElementById('box'))
+		}
+	}
+```
+* 小型代码库
+```
+	var Tn={
+		getEvent:function(event){
+			return event||window.event;
+		},
+		getTarget:function(event){
+			var event=this.getEvent(event);
+			return event.target||event.srcElement;
+		},
+		preventDefault : function(event){
+			var event=this.getEvent(event);
+			if (event.preventDefault) {
+				event.preventDefault();
+			}else{
+				event.returnValue=false;
+			}
+		},
+		getId:function(id){
+			return document.getElementById(id);
+		},
+		css:function(id,key,value){
+			this.getId(id).style[key]=value;
+		},
+		attr:function(id,key,value){
+			this.getId(id)[key]=value;
+		},
+		html:function(id,html){
+			this.getId(id).innerHTML=html;
+		},
+		on:function(id,type,fn){
+			this.getId(id)['on'+type]=fn;
+		},
+	}
+	Tn.css('box','background','red');
+	Tn.html('box','内容');
+	Tn.attr('box','class','box');// 不管用，看不懂。
+	Tn.on('box','click',function(e){
+		Tn.preventDefault(e);
+		console.log(1)
+	})
+```
+## 适配器模式
+* 框架与框架之间适配。
+```
+// 相似的框架A 与jQuery适配。
+window.A = A = jQuer;
+```
+* 参数适配器
+```
+	function(obj){
+		var _adapter={
+			name: '随便',
+			title: '标题',
+			age: 20,
+			color: 'red',
+			size: 100,
+			prize: 50,
+		}
+		for (var i in _adapter){
+			_adapter[i]=obj[i]||_adapter[i];
+		}
+	}
+```
+* 数据适配
+```
+	var arr=['zangsan','干嘛','标题','9/22'];
+	function arrToObjAdapter(arr){
+		return {
+			name: arr[0],
+			type: arr[1],
+			title: arr[2],
+			time: arr[3],
+		};
+	};
+	console.log(arrToObjAdapter(arr));
+```
+## 代理模式
+* src图片跨域。
+```
+	var Count=(function(){
+		var _img=new Image();
+		return function(param){
+			var str="http://www.count.com/a.gif?";
+			for (var i in param){
+				str += i + '=' + param[i];
+			}
+			_img.src=str;
+			console.log(str)
+		}
+	})()
+	Count({num:10});
 ```
