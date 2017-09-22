@@ -901,10 +901,10 @@ window.A = A = jQuer;
 		dom.style.color=color;
 		dom.style.background=bg;
 	}
-	span[0].oumouseover=function(){
+	spans[0].oumouseover=function(){
 		changeColor(this,'#ddd','#fff');
 	}
-	span[0].onmouseout=function(){
+	spans[0].onmouseout=function(){
 		changeColor(this,'#f00','#00f');
 	}
 ```
