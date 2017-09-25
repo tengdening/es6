@@ -281,7 +281,10 @@ console.log(book.alikeBook); js book  // ["css book", "html book", "xml book", "
 	console.log(aa.alikeBook);
 ```
 ### 寄生组合式继承
-* 这里的第二个函数inherPrototype看不懂。
+* 先创建一个继承对象，里边返回一个实例化对象。
+* 然后创建一个固有原型，里边把第二个参数的原型返回给继承对象，然后得到一个有第二个参数的对象P，
+* 然后把第一个参数给了P的构造函数，最后第一个参数的原型等于P。
+* 上边其实就是把第一个对象的构造函数继承下来，把第二对象的原型继承下来。
 ```
 	function inheritObject(o){
 		function F(){};
@@ -909,4 +912,106 @@ window.A = A = jQuer;
 	}
 ```
 ## 组合模式
-* 
+* 把对象组合成树状结构，通过一个主对象，一层一层往下继承。
+* 这个回头再研究下。太多代码量。
+```
+	var News=function(){
+		this.children = {};
+		this.element = null;
+	};
+	News.prototype=function(){
+		init: function(){
+			throw new Error('请重写你的方法');
+		},
+		add: function(){
+			throw new Error("请重写你的方法");
+		},
+		getElement: function(){
+			throw new Error("请重写你的方法");
+		},
+	};
+	var Container=function(id,parent){
+		News.call(this);
+		this.id=id;
+		this.parent=parent;
+		this.init();
+	};
+
+	// 下边这个函数是寄生组合式继承里定义的函数。
+	// 把News的原型继承给了Container。
+	inherPrototype(Container,News);
+	Container.prototype.init=function(){
+		this.element=document.createElement('ul');
+		this.element.id=this.id;
+		this.element.className='new-container'
+	};
+```
+## 享元模式
+* 将共有的属性方法提取出来，可以更好的加快速度。
+```
+// 代码省略，回头继续研究。
+```
+## 模板方法模式
+* 定义一套模板，样式什么滴设置成参数。需要用到，直接继承。
+```
+	var data={
+		content: '内容',
+		confirm: '提交',
+		width: 300,
+		height: 200,
+	};
+	var Alert=function(data){
+		if (!data) {
+			return console.log(1);
+		}
+		this.content = data.content;
+		this.panel = document.createElement('div');
+		this.panel.style.width=data.width+'px';
+		this.panel.style.height=data.height+'px';
+		this.contentNode = document.createElement('p');
+		this.confirmBtn = document.createElement('span');
+		this.closeBtn = document.createElement('b');
+		this.panel.className = 'alert';
+		this.closeBtn.className = 'a-close';
+		this.confirmBtn.className = 'a-confirm';
+		this.confirmBtn.innerHTML = data.confirm || '确认';
+		this.closeBtn.innerHTML = data.close || '关闭';
+		this.contentNode.innerHTML = this.content;
+		this.success=data.success || function(){};
+		this.fail=data.fail || function(){};
+	};
+	Alert.prototype={
+		init : function(){
+			this.panel.appendChild(this.closeBtn);
+			this.panel.appendChild(this.contentNode);
+			this.panel.appendChild(this.confirmBtn);
+			document.body.appendChild(this.panel);
+			this.bindEvent();
+			this.show();
+		},
+		bindEvent : function(){
+			var me=this;
+			this.closeBtn.onclick=function(){
+				me.fail();
+				me.hide();
+			};
+			this.confirmBtn.onclick=function(){
+				me.success();
+				me.hide();
+			}
+		},
+		hide : function(){
+			this.panel.style.display = 'none';
+		},
+		show : function(){
+			this.panel.style.display = 'block';
+		},
+	};
+	var RightAlert=function(data){
+		Alert.call(this,data);
+		this.confirmBtn.className=this.confirmBtn.className+'-right';
+	};
+	RightAlert.prototype=new Alert(data);
+	var bb=new RightAlert(data);
+	bb.init();
+```
