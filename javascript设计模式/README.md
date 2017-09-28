@@ -1015,3 +1015,4 @@ window.A = A = jQuer;
 	var bb=new RightAlert(data);
 	bb.init();
 ```
+## 观察者模式
