@@ -1016,3 +1016,270 @@ window.A = A = jQuer;
 	bb.init();
 ```
 ## 观察者模式
+* 定义了一个观察者，里边有一个内容模块，注册模块，发步模块，移除模块。
+* 感觉Observer.regist里边的else里边的push好像有问题。
+```
+	var Observer=(function(){
+		var _messages={};
+		return {
+			regist : function(type,fn){
+				if(typeof _messages[type] === 'undefined'){
+					_messages[type]=[fn];
+				}else{
+					_messages[type].push(fn);
+				}
+				return this;
+			},
+			fire : function(type,args){
+				if(!_messages[type]){
+					return;
+				}
+				var events={
+					type: type,
+					args: args || {},
+				},
+					i=0,
+					len=_messages[type].length;
+				for (; i <len; i++) {
+					_messages[type][i].call(this,events);
+				}
+			},
+			remove: function(type,fn){
+				if (_messages[type] instanceof Array) {
+					var i = _messages[type].length-1;
+					for ( ; i >= 0 ; i--){
+						_messages[type][i] === fn && _messages[type].splice(i,1);
+					}
+				}
+			}
+		}
+		
+	})
+	var observer=new Observer()
+	observer.regist('aaa',function(e){
+		console.log(e.type,e.args.msg);
+	});
+	observer.fire('aaa',{
+		msg: '传递参数'
+	})
+```
+* 第二个例子
+```
+<body>
+	<ul id='msg'></ul>
+	<textarea name="" id="user_input" cols="30" rows="10"></textarea>
+	<input type="submit" id="user_submit">
+	<p id="msg_num">0</p>
+</body>
+<script>
+	var Observer=(function(){
+		var _messages={};
+		return {
+			regist : function(type,fn){
+				if(typeof _messages[type] === 'undefined'){
+					_messages[type]=[fn];
+				}else{
+					_messages[type].push(fn);
+				}
+				return this;
+			},
+			fire : function(type,args){
+				if(!_messages[type]){
+					return;
+				}
+				var events={
+					type: type,
+					args: args || {},
+				},
+					i=0,
+					len=_messages[type].length;
+				for (; i <len; i++) {
+					_messages[type][i].call(this,events);
+				}
+			},
+			remove: function(type,fn){
+				if (_messages[type] instanceof Array) {
+					var i = _messages[type].length-1;
+					for ( ; i >= 0 ; i--){
+						_messages[type][i] === fn && _messages[type].splice(i,1);
+					}
+				}
+			}
+		}
+		
+	})
+	var observer=new Observer()
+
+	// 简易的获取ID元素
+	function $(id){
+		return document.getElementById(id);
+	}
+	// 工程师A
+	(function(){
+		function addMsgItem(e){
+			var text = e.args.text,
+				ul=$('msg'),
+				li=document.createElement('li'),
+				span=document.createElement('span');
+			li.innerHTML=text;
+			span.innerHTML='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除';
+			span.onclick=function(){
+				ul.removeChild(li);
+				observer.fire('removeCommentMessage',{
+					num: -1,
+				});
+			}
+			li.appendChild(span);
+			ul.appendChild(li);
+		}
+		observer.regist('addCommentMessage',addMsgItem);
+	})();
+	// 工程师B
+	(function(){
+		function changeMsgNum(e){
+			var num=e.args.num;
+			$('msg_num').innerHTML= parseInt($('msg_num').innerHTML)+num;
+		};
+		observer
+			.regist('addCommentMessage',changeMsgNum)
+			.regist('removeCommentMessage',changeMsgNum);
+	})();
+	// 工程师C
+	(function(){
+		$('user_submit').onclick=function(){
+			var text=$('user_input');
+			if (text.value==='') {
+				return ;
+			}
+			observer.fire('addCommentMessage',{
+				text: text.value,
+				num: 1,
+			});
+			text.value='';
+		};
+	})();
+</script>
+```
+* 还是不懂，再来个例子
+```
+	var Observer=(function(){
+		var _messages={};
+		return {
+			regist : function(type,fn){
+				if(typeof _messages[type] === 'undefined'){
+					_messages[type]=[fn];
+				}else{
+					_messages[type].push(fn);
+				}
+				return this;
+			},
+			fire : function(type,args){
+				if(!_messages[type]){
+					return;
+				}
+				var events={
+					type: type,
+					args: args || {},
+				},
+					i=0,
+					len=_messages[type].length;
+				for (; i <len; i++) {
+					_messages[type][i].call(this,events);
+				}
+			},
+			remove: function(type,fn){
+				if (_messages[type] instanceof Array) {
+					var i = _messages[type].length-1;
+					for ( ; i >= 0 ; i--){
+						_messages[type][i] === fn && _messages[type].splice(i,1);
+					}
+				}
+			}
+		}
+		
+	})
+	var observer=new Observer();
+	var Student=function(result){
+		var that=this;
+		that.result=result;
+		that.say=function(){
+			console.log(that.result);
+		};
+	};
+	Student.prototype.answer=function(question){
+		observer.regist(question,this.say);
+	};
+	Student.prototype.sleep=function(question){
+		console.log(this.result+''+question+'已被注销')
+		observer.remove(question,this.say);
+	};
+	Teacher=function(){};
+	Teacher.prototype.ask=function(question){
+		console.log('问题是：' +question);
+		observer.fire(question)
+	};
+	var student1=new Student('学生1回答问题'),
+		student2=new Student('学生2回答问题'),
+		student3=new Student('学生3回答问题');
+	student1.answer('什么是设计模式');
+	student1.answer('简述观察者模式');
+	student2.answer('什么是设计模式');
+	student3.answer('什么是设计模式');
+	student3.answer('简述观察者模式');
+	student3.sleep('简述观察者模式');
+	var teacher=new Teacher();
+	teacher.ask('什么是设计模式');
+	teacher.ask('简述观察者模式');
+```
+## 状态模式
+* 先创建好状态，然后来调用
+```
+	var MarryState=function(){
+		var _currentState={},
+			states = {
+				jump: function(){
+					console.log('跳跃');
+				},
+				move: function(){
+					console.log('移动');
+				},
+				shoot: function(){
+					console.log('射击');
+				},
+				squat: function(){
+					console.log('蹲下');
+				},
+			},
+		 	Action = {
+				changeState: function(){
+					var arg=arguments;
+					_currentState={};
+					if (arg.length) {
+						for (var i = 0 , len=arg.length;i<len;i++){
+							_currentState[arg[i]]=true;
+						}
+					}
+					return this;
+				},
+				goes: function(){
+					console.log('触发一次动作');
+					for (var i in _currentState){
+						states[i]&&states[i]();
+					}
+					return this;
+				},
+			};
+		return {
+			change: Action.changeState,
+			goes: Action.goes,
+		};
+	}
+	var marry=new MarryState;
+	marry
+		.change('jump','shoot')
+		.goes()
+		.goes()
+		.change('shoot')
+		.goes()
+```
+## 策略模式
