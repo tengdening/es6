@@ -492,3 +492,239 @@ vm.watch('a',function(nveVal,oldVal){
 		})
 	</script>
 ```
+* computend setter
+```
+	<div id="app">
+	  <p>{{ site }}</p>
+	</div>
+
+	<script>
+		var vm = new Vue({
+		  el: '#app',
+		  data: {
+			name: 'Google',
+			url: 'http://www.google.com'
+		  },
+		  computed: {
+		    site: {
+		      // getter
+		      get: function () {
+		        return this.name + ' ' + this.url
+		      },
+		      // setter
+		      set: function (newValue) {
+		        var names = newValue.split(' ')
+		        this.name = names[0]
+		        this.url = names[names.length - 1]
+		      }
+		    }
+		  }
+		})
+		// 调用 setter， vm.name 和 vm.url 也会被对应更新
+		vm.site = '菜鸟教程 http://www.runoob.com';
+		document.write('name: ' + vm.name);
+		document.write('<br>');
+		document.write('url: ' + vm.url);
+	</script>
+```
+> 上边的name和url被下边name和url所覆盖
+#### vue.js 样式绑定
+##### class属性绑定
+* 可以为 v-bind:class 设置一个对象，来动态的切换class
+```
+	<style>
+		.active {
+			width: 100px;
+			height: 100px;
+			background: green;
+		}
+	</style>
+	<div id="app">
+	  <div v-bind:class="{ active: isActive }"></div>
+	</div>
+
+	<script>
+		new Vue({
+		  el: '#app',
+		  data: {
+		    isActive: true
+		  }
+		})
+	</script>
+```
+* 也可以在对象中传入更多的属性来切换多个class
+```
+	<style>
+		.active {
+			width: 100px;
+			height: 100px;
+			background: green;
+		}
+		.red{
+			background: red;
+		}
+	</style>
+	<div id="app">
+	  <div v-bind:class="{ active: isActive ,red: isRed}"></div>
+	</div>
+
+	<script>
+		new Vue({
+		  el: '#app',
+		  data: {
+		    isActive: true,
+		    isRed: true
+		  }
+		})
+	</script>
+```
+* 也可以直接绑定一个对象
+```
+	<style>
+		.active {
+			width: 100px;
+			height: 100px;
+			background: green;
+		}
+		.red{
+			background: red;
+		}
+	</style>
+	<div id="app">
+	  <div v-bind:class="isObject"></div>
+	</div>
+
+	<script>
+		new Vue({
+		  el: '#app',
+		  data: {
+		  	isObject:{
+			  	active: true,
+			    'red': true
+		  	}
+		    
+		  }
+		})
+	</script>
+```
+* 绑定返回对象的计算属性
+```
+	<div id="app">
+	  <div v-bind:class="classObject"></div>
+	</div>
+
+	<script>
+	new Vue({
+	  el: '#app',
+	  data: {
+	  isActive: true,
+	  error: null
+	  },
+	  computed: {
+	    classObject: function () {
+	      return {
+	        active: this.isActive && !this.error,
+	        'text-danger': this.error && this.error.type === 'fatal',
+	      }
+	    }
+	  }
+	})
+	</script>
+```
+##### 数组语法
+* 把一个数组传给v-bind:class
+```
+	<div id="app">
+		<p v-bind:class="[activeClass,errorClass]"></p>	
+	</div>
+	<script>
+		new Vue({
+			el: #app,
+			data: {
+				activeClass: 'active',
+				errorClass: 'text-danger'
+			}
+		})
+	</script>
+```
+* 使用三元表达式来切换列表中的class
+```
+	<style>
+	.text-danger {
+		width: 100px;
+		height: 100px;
+		background: red;
+	}
+	.active {
+		width: 100px;
+		height: 100px;
+		background: green;
+	}
+	</style>
+	<div id="app">
+		<div v-bind:class="[errorClass,isActive?activeClass: '']"></div>
+	</div>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				isActive: true,
+				activeClass: 'active',
+				errorClass: 'text-danger'
+			}
+		})
+	</script>
+```
+##### vue.js style(内联样式)
+* v-bind:style 直接设置样式
+```
+<div id="app">
+	<div v-bind:style="{ color: activeClass,fontSize: fontSize + 'px' }">标题</div>
+</div>
+<script>
+	new Vue({
+		el: '#app',
+		data: {
+			activeClass: 'green',
+			fontSize: 50
+		}
+	})
+</script>
+```
+* 也可以直接绑定一个样式对象
+```
+<div id="app">
+	<div v-bind:style="styleObject">标题</div>
+</div>
+<script>
+	new Vue({
+		el: '#app',
+		data: {
+			styleObject: {
+				color: 'red',
+				fontSize: '50px'
+			}
+		}
+	})
+</script>
+```
+* 页可以使用数组将多个样式对象应用到元素上
+```
+<div id="app">
+	<div v-bind:style="[styleObject,fontWeightObject]">标题</div>
+</div>
+<script>
+	new Vue({
+		el: '#app',
+		data: {
+			styleObject: {
+				color: 'red',
+				fontSize: '50px'
+			},
+			fontWeightObject: {
+				fontWeight: 'bold'
+			}
+		}
+	})
+</script>
+```
