@@ -5,6 +5,9 @@
 * data 存储数据的
 * methods 存储方法的
 * filters 添加过滤器的
+* computed 计算属性关键词
+* methods 计算属性关键词
+>* 以上两个的效果都是一样的，但是computed是基于它的依赖缓存，只有相关依赖发生改变时才会重新取值。而使用methods，在重新渲染的时候，函数总会重新调用执行。
 #### 插值
 ##### 文本
 * 最常用的就是双大括号的方式插值 '{{}}';
@@ -218,3 +221,251 @@
 		// 选项
 	})
 ```
+##### 属性和方法
+* 每个Vue实例都会代理其data对象里所有的属性
+```
+	var data = { a: 1 };
+	var vm= new Vue({
+		data: data
+	})
+	vm.a === data.a     // true
+	vm.a= 2;
+	data.a              // 2
+	data.a= 3;
+	vm.a                // 3
+```
+* 除了 data 属性， Vue 实例暴露了一些有用的实例属性与方法。这些属性与方法都有前缀 $，以便与代理的 data 属性区分
+```
+var data= { a: 1 };
+var vm= new Vue({
+	el: '#app',
+	data: data
+})
+vm.$el === document.getElementById("app")      // true
+vm.$data === data 							   // true
+vm.watch('a',function(nveVal,oldVal){
+	// 这个回调将在'vm.a'改变之后调用
+})
+```
+### Vue.js 条件与循环
+#### 条件判断
+##### v-if
+* 判断条件使用v-if指令
+```
+	<div id="app">
+	    <p v-if="seen">现在你看到我了</p>
+	    <template v-if="ok">
+	      <h1>菜鸟教程</h1>
+	      <p>学的不仅是技术，更是梦想！</p>
+	      <p>哈哈哈，打字辛苦啊！！！</p>
+	    </template>
+	</div>
+	    
+	<script>
+	new Vue({
+	  el: '#app',
+	  data: {
+	    seen: true,
+	    ok: true
+	  }
+	})
+	</script>
+```
+##### v-else
+* 和 v-if 对应，否则的意思
+```
+	<div id="app">
+		<p>{{ num }}</p>
+		<div v-if="num > 0.5">
+		  Sorry
+		</div>
+		<div v-else>
+		  Not sorry
+		</div>
+	</div>
+		
+	<script>
+	new Vue({	
+	  	el: '#app',
+		data: {
+			num: Math.random()
+		}
+	})
+	</script>
+``` 
+##### v-else-if 
+* 也就是js的else if
+```
+	<div id="app">
+	    <div v-if="type === 'A'">
+	      A
+		</div>
+		<div v-else-if="type === 'B'">
+		  B
+		</div>
+		<div v-else-if="type === 'C'">
+		  C
+		</div>
+		<div v-else>
+		  Not A/B/C
+		</div>
+	</div>
+		
+	<script>
+	new Vue({
+	  el: '#app',
+	  data: {
+	    type: 'C'
+	  }
+	})
+	</script>
+```
+##### v-show
+* 可以根据它来判断是否显示
+```
+	<div id="app">
+	    <h1 v-show="ok">Hello!</h1>
+	</div>
+		
+	<script>
+	new Vue({
+	  el: '#app',
+	  data: {
+	    ok: true
+	  }
+	})
+	</script>
+```
+#### 循环语句
+##### v-for
+* 以site in sites 形式的特殊语法
+```
+	<div id="app">
+		<ol>
+			<li v-for="site in sites">
+				{{ site.name }}
+			</li>
+		</ol>
+	</div>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				sites:[
+					{name: 'Runoob'},
+					{name: 'Google'},
+					{name: 'Taobao'}
+				]
+			}
+		})
+	</script>
+```
+##### v-for 迭代对象
+* v-for 可以通过一个对象的属性来迭代数据。
+```
+	<div id="app">
+		<ul>
+			<li v-for="value in object">
+				{{ value }}
+			</li>
+		</ul>
+	</div>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				object: {
+					name: '题目',
+					url: 'www.baidu.com',
+					slogan: '这叫技术'
+				}
+			}
+		})
+	</script>
+```
+* 也可以传第二个参数获取它的键名
+```
+	<div id="app">
+		<ul>
+			<li v-for="(value,key) in object">
+				{{ key }} : {{ value }}
+			</li>
+		</ul>
+	</div>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				object: {
+					name: '题目',
+					url: 'www.baidu.com',
+					slogan: '这叫技术'
+				}
+			}
+		})
+	</script>
+```
+* 第三个参数为索引
+```
+	<div id="app">
+		<ul>
+			<li v-for="(value,key,index) in object">
+			{{ index }} . {{ key }} : {{ value }}
+			</li>
+		</ul>
+	</div>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				object: {
+					name: '题目',
+					url: 'www.baidu.com',
+					slogan: '这叫技术'
+				}
+			}
+		})
+	</script>
+```
+* v-for 迭代整数,它也可以循环整数
+```
+	<div id="app">
+	  <ul>
+	    <li v-for="n in 10">
+	     {{ n }}
+	    </li>
+	  </ul>
+	</div>
+
+	<script>
+	new Vue({
+	  el: '#app'
+	})
+	</script>
+```
+#### vue.js计算属性
+* 计算属性关键词 computed
+```
+	<div id="app">
+		<p>
+			原始字符串：{{ message }}
+		</p>
+		<p>
+			计算后字符串：{{ reversedMessage }}
+		</p>
+	</div>
+	<script>
+		new Vue({
+			el: "#app",
+			data: {
+				message: 'Runoob!'
+			},
+			computed: {
+				reversedMessage: function(){
+					return this.message.split('').reverse().json('')
+				}
+			}
+		})
+	</script>
+```
+
