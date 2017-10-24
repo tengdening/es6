@@ -728,3 +728,19 @@ vm.watch('a',function(nveVal,oldVal){
 	})
 </script>
 ```
+#### vue.js事件处理器
+##### 需要事件监听可以使用v-on事件
+```
+	<div id='app'>
+		<button v-on:click="counter += 1">增加1</button>
+		<p>这个按钮被点击了{{ counter }}次。</p>
+	</div>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				counter: 0
+			}
+		})
+	</script>
+```
