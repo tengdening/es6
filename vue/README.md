@@ -8,6 +8,7 @@
 * computed 计算属性关键词
 * methods 计算属性关键词
 > 以上两个的效果都是一样的，但是computed是基于它的依赖缓存，只有相关依赖发生改变时才会重新取值。而使用methods，在重新渲染的时候，函数总会重新调用执行。
+> 可以说使用 computed 性能会更好，但是如果你不希望缓存，你可以使用 methods 属性。
 #### 插值
 ##### 文本
 * 最常用的就是双大括号的方式插值 '{{}}';
@@ -468,4 +469,27 @@ vm.watch('a',function(nveVal,oldVal){
 		})
 	</script>
 ```
-
+* 计算属性关键词 methods
+```
+	<div id="app">
+		<p>
+			原始字符串：{{ message }}
+		</p>
+		<p>
+			计算后字符串：{{ reversedMessage() }}
+		</p>
+	</div>
+	<script>
+		new Vue({
+			el: "#app",
+			data: {
+				message: 'Runoob!'
+			},
+			methods: {
+				reversedMessage: function(){
+					return this.message.split('').reverse().json('')
+				}
+			}
+		})
+	</script>
+```
