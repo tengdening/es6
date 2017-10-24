@@ -1264,6 +1264,7 @@ window.A = A = jQuer;
 				goes: function(){
 					console.log('触发一次动作');
 					for (var i in _currentState){
+						// 如果该对象有，则执行。
 						states[i]&&states[i]();
 					}
 					return this;
@@ -1283,3 +1284,4 @@ window.A = A = jQuer;
 		.goes()
 ```
 ## 策略模式
+* 
