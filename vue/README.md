@@ -992,3 +992,27 @@ vm.watch('a',function(nveVal,oldVal){
 	</script>
 ```
 ##### 动态Prop 
+* 类似于用 v-bind 绑定 HTML 特性到一个表达式，也可以用 v-bind 动态绑定 props 的值到父组件的数据中。每当父组件的数据变化时，该变化也会传导给子组件：
+```
+	<div id="app">
+		<input v-model="message">
+		<br>
+		<tem v-bind:tems="message"></tem>
+	</div>
+	<script>
+		Vue.component('tem',{
+			props: ['tems'],
+			template: '<span>{{ tems }}</span>'
+		})
+		new Vue({
+			el: "#app",
+			data: {
+				message: '父组件内容'
+			}
+		})
+	</script>
+```
+* 将v-bind指令传到每一个重复的组件中。
+```
+
+```
