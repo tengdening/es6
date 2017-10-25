@@ -833,3 +833,111 @@ vm.watch('a',function(nveVal,oldVal){
 	Ctrl + Click
 	<div @click.ctrl="doSomething">Do something</div>
 ```
+#### Vue.js 提交表单
+##### v-model
+* 会根据控件类型自动选取正确的方法来更新元素。
+```
+<div id="app">
+	<p>{{ message }}</p>
+	<input v-model="message">
+</div>
+<script>
+	new Vue({
+		el: "#app",
+		data: {
+			message: "aaaaa",
+		}
+	})
+</script>
+```
+##### 复选框
+* 复选框单个为逻辑值，多个则绑定到同一个数组中。
+```
+	<div id="app">
+		<p>单个复选框</p>
+		<input type="checkbox" v-model="checked">
+		<label for="checkbox">{{ checked }}</label>
+		<p>多个复选框</p>
+		<input type="checkbox" value="Runoob" v-model='checkNames'>
+		<label for="runoob">Runoob</label>
+		<input type="checkbox" value="Goolgle" v-model='checkNames'>
+		<label for="goolgle">Goolgle</label>
+		<input type="checkbox" value="Taobao" v-model='checkNames'>
+		<label for="taobao">Taobao</label>
+		<br>
+		<span>选择的值为：{{ checkNames }}</span>
+	</div>
+	<script>
+		new Vue({
+			el: "#app",
+			data: {
+				checked: false,
+				checkNames: []
+			}
+		})
+	</script>
+```
+##### 单选按钮
+* 单选按钮的双向绑定
+```
+	<div id="app">
+	  <input type="radio" id="runoob" value="Runoob" v-model="picked">
+	  <label for="runoob">Runoob</label>
+	  <br>
+	  <input type="radio" id="google" value="Google" v-model="picked">
+	  <label for="google">Google</label>
+	  <br>
+	  <span>选中值为: {{ picked }}</span>
+	</div>
+
+	<script>
+	new Vue({
+	  el: '#app',
+	  data: {
+		picked : 'Runoob'
+	  }
+	})
+	</script>
+```
+##### select按钮
+* 下拉列表的双向数据绑定
+```
+	<div id="app">
+	  <select v-model="selected" name="fruit">
+	    <option value="">选择一个网站</option>
+	    <option value="www.runoob.com">Runoob</option>
+	    <option value="www.google.com">Google</option>
+	  </select>
+	 
+	  <div id="output">
+	      选择的网站是: {{selected}}
+	  </div>
+	</div>
+
+	<script>
+	new Vue({
+	  el: '#app',
+	  data: {
+		selected: '' 
+	  }
+	})
+	</script>
+```
+##### 修饰符
+###### .lazy
+* 添加 .lazy 以后，双向数据绑定会转变为在change事件中同步
+```
+	在 "change" 而不是 "input" 事件中更新
+	<input v-model.lazy="msg" >
+```
+###### .number
+* 如果想自动将用户的输入值转为Number类型（如果原值的转换结果为NaN则返回原值），可以添加一个修饰符 number 给 v-model 来处理输入值
+```
+	<input v-model.number="age" type="number">
+```
+###### .trim
+* 如果要自动过滤用户输入的首尾空格，可以添加 trim 修饰符到 v-model 上过滤输入
+```
+	<input v-model.trim="msg">
+```
+#### vue.js组件
