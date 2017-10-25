@@ -744,3 +744,92 @@ vm.watch('a',function(nveVal,oldVal){
 		})
 	</script>
 ```
+* 通常情况下我们可以使用一个方法来调用javascript方法。
+```
+	<div id="app">
+		<div v-on:click='greet'>点击</div>
+	</div>
+	<script>
+		new Vue({
+			el: "#app",
+			data: {
+				name: 'vue.js'
+			},
+			methods: {
+				greet: function(event){
+					alert('hello'+ this.name+ '!')
+					if(event){
+						alert(event.target.tagName)
+					}
+				}
+			}
+		})
+	</script>
+```
+* 除了可以直接绑定到一个方法，也可以用来内联javascript语句
+```
+	<div id='app'>
+		<button v-on:click="say(hi)">say hi</button>
+		<button v-on:click="say(what)">say what</button>
+	</div>
+	<script>
+		new Vue({
+			el: "#app",
+			methods: {
+				say: function(message){
+					alert(message)
+				}
+			}
+		})
+	</script>
+```
+##### 事件修饰符
+* Vue.js 为 v-on 提供了事件修饰符来处理 DOM 事件细节，如：event.preventDefault() 或 event.stopPropagation()。Vue.js通过由点(.)表示的指令后缀来调用修饰符。
+> .stop
+> .prevent
+> .capture
+> .self
+> .once
+```
+	阻止事件冒泡
+	<a v-on:click.stop="doThis"></a>
+	提交事件不再重复加载页面
+	<form v-on:submit.prevent="onSubmit"></form>
+	修饰词可以串联
+	<a v-on:click.stop.prevent="doThat"></a>
+	只有修饰符
+	<form v-on:submint.prevent></form>
+	添加事件侦听器时使用事件捕获模式
+	<div v-on:click.capture="doThis">...</div>
+	只当事件在该元素本身触发时触发回调
+	<div v-on:click.self="doThat">...</div>
+	click只能点击一次
+	<div v-on:click.once="doThis"></div>
+```
+##### 按键修饰符
+* vue允许为v-on在监听器事件时添加按键修饰符。
+> .enter
+> .tab
+> .delete
+> .esc
+> .space
+> .up
+> .down
+> .left
+> .right
+> .ctrl
+> .alt
+> .shift
+> .meta
+```
+	只有在keyCode是13时调用 vm.submit()
+	<input v-on:keyup:13='submit'>
+	记住所有的keyCode不现实，Vue为最常用的设置了别名
+	<input v-on:keyup.enter='submit'>
+	缩写
+	<input @keyup.enter='submit'>
+	Alt + C
+	<input @keyup.alt.67="clear">
+	Ctrl + Click
+	<div @click.ctrl="doSomething">Do something</div>
+```
