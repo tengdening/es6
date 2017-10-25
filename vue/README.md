@@ -7,6 +7,7 @@
 * filters 添加过滤器的
 * computed 计算属性关键词
 * methods 计算属性关键词
+* component 创建组件用到的
 > 以上两个的效果都是一样的，但是computed是基于它的依赖缓存，只有相关依赖发生改变时才会重新取值。而使用methods，在重新渲染的时候，函数总会重新调用执行。<b>可以说使用 computed 性能会更好，但是如果你不希望缓存，你可以使用 methods 属性。</b>
 #### 插值
 ##### 文本
@@ -941,3 +942,53 @@ vm.watch('a',function(nveVal,oldVal){
 	<input v-model.trim="msg">
 ```
 #### vue.js组件
+##### 全局组件
+* 所有实例都能使用全局组件
+```
+	<div id="app">
+		<tem></tem>
+	</div>
+	<script>
+		Vue.component('tem',{
+			template: '<h1>自定义组件！</h1>'
+		})
+		new Vue({
+			el: "#app"
+		})
+	</script>
+```
+##### 局部组件
+* 我们也可以在实例选项中注册局部组件，这样组件只能在实例中使用。
+```
+	<div id="app">
+		<tem></tem>
+	</div>
+	<script>
+		var Child={
+			template: '<h1>自定义组件！</h1>'
+		}
+		new Vue({
+			el: "#app",
+			components: {
+				tem: Child
+			}
+		})
+	</script>
+```
+##### prop
+* 父组件用来传递数据的一个自定义属性。父组件的数据需要通过 props把数据传给子组件，子组件需要显式地用 props 选项声明 "prop"：
+```
+	<div id="app">
+		<tem tems="hello word!"></tem>
+	</div>
+	<script>
+		Vue.component('tem',{
+			props: ['tems'],
+			temlpate: '<span>{{ tems }}</span>'
+		})
+		new Vue({
+			el: "#app"
+		})
+	</script>
+```
+##### 动态Prop 
