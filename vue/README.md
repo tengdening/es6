@@ -1014,5 +1014,9 @@ vm.watch('a',function(nveVal,oldVal){
 ```
 * 将v-bind指令传到每一个重复的组件中。
 ```
-
+<div id="app">
+	<ol>
+		
+	</ol>
+</div>
 ```
