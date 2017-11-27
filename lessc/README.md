@@ -292,7 +292,7 @@
 	a%3D1
 ```
 * e: css转义，用~符号代替。
-> <b style='color: #f00;'>看不懂的函数。</b>
+>> 看不懂的函数。
 ```
 	div{
 		color: e('blue');
@@ -305,7 +305,7 @@
 	}
 ```
 * %format: 函数 %(string, arguments ...) 格式化一个字符串。
-> <b style='color: #f00;'>看不懂的函数。</b>
+>>看不懂的函数。
 ```
 	format-a-d: %("repetitions: %a file: %d", 1 + 2, "directory/file.less");
 	format-a-d-upper: %('repetitions: %A file: %D', 1 + 2, "directory/file.less");
