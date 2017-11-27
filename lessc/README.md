@@ -36,3 +36,27 @@
 		border-top: 1px solid #ddd;
 	}
 ```
+#### 嵌套
+```
+#header{
+	background: #f00;
+}
+#header .box{
+	font-size: 12px;
+}
+#header .right{
+	float: right;
+}
+```
+> 输出
+```
+#header{
+	background: #f00;
+	.box{
+		font-size: 12px;
+	}
+	.right{
+		float: right;
+	}
+}
+```
